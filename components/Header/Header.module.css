@@ -1,37 +1,30 @@
+
+
 .header {
+  background-color: #2f2f2f;
+  padding: 16px 0;
+}
+
+.nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.list {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background-color: #333;
-  color: white;
+  justify-content: space-between;
 }
 
-.header a {
+.link {
+  color: white;
   text-decoration: none;
-  color: white;
-  font-size: 1.5rem;
-  font-weight: bold;
+  margin-right: 20px;
 }
 
-.header a:hover {
-  color: #ddd;
-}
-
-.navigation {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+.list li {
+  list-style: none;
   display: flex;
-  gap: 1rem;
-}
-
-.navigation li a {
-  text-decoration: none;
-  color: white;
-  font-size: 1rem;
-}
-
-.navigation li a:hover {
-  color: #ddd;
+  align-items: center;
 }

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createNote } from "@/lib/api";
+import { createNote } from "@/lib/api/api";
 import css from "./NoteForm.module.css";
 import { useRouter } from "next/navigation";
 import { useNoteStore } from "@/lib/store/noteStore";

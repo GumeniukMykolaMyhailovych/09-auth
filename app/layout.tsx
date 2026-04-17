@@ -3,8 +3,9 @@ import { ReactNode } from "react";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import Providers from "@/components/TanStackProvider/Providers";
+import AuthProvider from "@/components/AuthProvider/AuthProvider";
 import { Roboto } from "next/font/google";
-import type { Metadata } from "next"; 
+import type { Metadata } from "next";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -39,10 +40,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={roboto.variable}>
         <Providers>
-          <Header />
-          {children}
-          {modal}
-          <Footer />
+          <AuthProvider>
+            <Header />
+            {children}
+            {modal}
+            <Footer />
+          </AuthProvider>
         </Providers>
       </body>
     </html>
