@@ -5,16 +5,16 @@ import {
 } from "@tanstack/react-query";
 import { fetchNotes } from "@/lib/api/clientApi";
 import NotesClient from "./Notes.client";
-import type { Metadata } from "next"; // 🔥 ДОДАЛИ
+import type { Metadata } from "next";
 
 type Props = {
-  params: {
+  params: Promise<{
     slug?: string[];
-  };
+  }>;
 };
 
 export default async function Page({ params }: Props) {
-  const slug = params.slug;
+  const { slug } = await params;
 
   const tag = slug?.[0] ?? "all";
   const normalizedTag = tag === "all" ? undefined : tag;
@@ -24,11 +24,11 @@ export default async function Page({ params }: Props) {
   await queryClient.prefetchQuery({
     queryKey: ["notes", 1, normalizedTag, ""],
     queryFn: () =>
-  fetchNotes({
-    page: 1,
-    tag: normalizedTag,
-    search: "",
-  }),
+      fetchNotes({
+        page: 1,
+        tag: normalizedTag,
+        search: "",
+      }),
   });
 
   return (
@@ -38,9 +38,10 @@ export default async function Page({ params }: Props) {
   );
 }
 
-// 🔥 ТИП ПОВЕРНЕННЯ ДОДАЛИ
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const tag = params.slug?.[0] || "All";
+  const { slug } = await params;
+
+  const tag = slug?.[0] || "All";
 
   return {
     title: `Notes - ${tag}`,
