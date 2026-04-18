@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createNote } from '@/lib/api/clientApi';
+import { createNote } from "@/lib/api/clientApi";
 import css from "./NoteForm.module.css";
 import { useRouter } from "next/navigation";
 import { useNoteStore } from "@/lib/store/noteStore";
@@ -12,10 +11,6 @@ export default function NoteForm() {
   const router = useRouter();
 
   const { draft, setDraft, clearDraft } = useNoteStore();
-
-  const [formData, setFormData] = useState(draft);
-
-
 
   const mutation = useMutation({
     mutationFn: createNote,
@@ -31,52 +26,52 @@ export default function NoteForm() {
   ) => {
     const { name, value } = e.target;
 
-    const updated = {
-      ...formData,
+    setDraft({
+      ...draft,
       [name]: value,
-    };
-
-    setFormData(updated);
-    setDraft(updated); // 🔥 зберігаємо в Zustand
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    mutation.mutate(formData);
+    mutation.mutate(draft);
   };
 
   const handleCancel = () => {
-    router.back(); // ❗ draft НЕ очищаємо
+    router.back();
   };
 
   return (
     <form className={css.form} onSubmit={handleSubmit}>
       <div className={css.formGroup}>
-        <label className={css.label}>Title</label>
+        <label htmlFor="title" className={css.label}>Title</label>
         <input
+          id="title"
+          type="text"
           name="title"
-          value={formData.title}
+          value={draft.title}
           onChange={handleChange}
           className={css.input}
         />
       </div>
 
       <div className={css.formGroup}>
-        <label className={css.label}>Content</label>
+        <label htmlFor="content" className={css.label}>Content</label>
         <textarea
+          id="content"
           name="content"
-          value={formData.content}
+          value={draft.content}
           onChange={handleChange}
           className={css.textarea}
         />
       </div>
 
       <div className={css.formGroup}>
-        <label className={css.label}>Tag</label>
+        <label htmlFor="tag" className={css.label}>Tag</label>
         <select
+          id="tag"
           name="tag"
-          value={formData.tag}
+          value={draft.tag}
           onChange={handleChange}
           className={css.input}
         >
