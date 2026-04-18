@@ -32,7 +32,13 @@ export async function proxy(request: NextRequest) {
       const setCookie = res.headers["set-cookie"];
 
       if (setCookie) {
-        response.headers.set("set-cookie", setCookie);
+        if (Array.isArray(setCookie)) {
+          setCookie.forEach((cookie) => {
+            response.headers.append("set-cookie", cookie);
+          });
+        } else {
+          response.headers.set("set-cookie", setCookie);
+        }
       }
 
       return response;
