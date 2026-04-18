@@ -11,3 +11,12 @@ export const fetchNoteById = async (id: string) => {
   const res = await api.get(`/notes/${id}`);
   return res.data;
 };
+
+export const createNote = async (data: {
+  title: string;
+  content: string;
+  tag?: string;
+}) => {
+  const res = await api.post("/notes", data);
+  return res.data;
+};
