@@ -1,56 +1,68 @@
-import axios from "axios";
+import { api } from "./api";
 import { User } from "@/types/user";
+import { Note } from "@/types/note";
 
-const BASE_URL = "https://notehub-api.goit.study";
 
-// REGISTER
+
 export const register = async (data: { email: string; password: string }) => {
-  const res = await axios.post<User>(`${BASE_URL}/auth/register`, data, {
-    withCredentials: true,
-  });
+  const res = await api.post<User>("/auth/register", data);
   return res.data;
 };
 
-// LOGIN
 export const login = async (data: { email: string; password: string }) => {
-  const res = await axios.post<User>(`${BASE_URL}/auth/login`, data, {
-    withCredentials: true,
-  });
+  const res = await api.post<User>("/auth/login", data);
   return res.data;
 };
 
-// SESSION
-export const checkSession = async () => {
-  const res = await axios.get<User | null>(`${BASE_URL}/auth/session`, {
-    withCredentials: true,
-  });
-  return res.data;
-};
-
-// LOGOUT
 export const logout = async () => {
-  await axios.post(`${BASE_URL}/auth/logout`, null, {
-    withCredentials: true,
-  });
+  await api.post("/auth/logout");
 };
 
-// 🔥 ВОТ ЦЕГО НЕ ВИСТАЧАЛО
+export const checkSession = async () => {
+  const res = await api.get<User | null>("/auth/session");
+  return res.data;
+};
+
+export const getMe = async () => {
+  const res = await api.get<User>("/users/me");
+  return res.data;
+};
+
+
+
 export const fetchNotes = async (params: {
   page?: number;
   search?: string;
   tag?: string;
 }) => {
-  const res = await axios.get(`${BASE_URL}/notes`, {
+  const res = await api.get<{ notes: Note[]; totalPages: number }>("/notes", {
     params,
-    withCredentials: true,
   });
   return res.data;
 };
 
-// (опціонально, але часто використовується)
+export const fetchNoteById = async (id: string) => {
+  const res = await api.get<Note>(`/notes/${id}`);
+  return res.data;
+};
+
+export const createNote = async (data: {
+  title: string;
+  content: string;
+  tag?: string;
+}) => {
+  const res = await api.post<Note>("/notes", data);
+  return res.data;
+};
+
 export const deleteNote = async (id: string) => {
-  const res = await axios.delete(`${BASE_URL}/notes/${id}`, {
-    withCredentials: true,
-  });
+  const res = await api.delete(`/notes/${id}`);
+  return res.data;
+};
+
+// USER
+
+export const updateUser = async (data: { username: string }) => {
+  const res = await api.patch<User>("/users/me", data);
   return res.data;
 };

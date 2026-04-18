@@ -1,12 +1,40 @@
-import axios from "axios";
+import { api } from "./api";
+import { cookies } from "next/headers";
+import { User } from "@/types/user";
+import { Note } from "@/types/note";
 
-if (!process.env.NEXT_PUBLIC_API_URL) {
-  throw new Error("NEXT_PUBLIC_API_URL is not defined");
-}
+const getHeaders = async () => {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+  const refreshToken = cookieStore.get("refreshToken")?.value;
 
-const baseURL = `${process.env.NEXT_PUBLIC_API_URL}/api`;
+  return {
+    Cookie: `accessToken=${accessToken}; refreshToken=${refreshToken}`,
+  };
+};
 
-export const serverApi = axios.create({
-  baseURL,
-  withCredentials: true,
-});
+export const fetchNotes = async (params: {
+  page?: number;
+  search?: string;
+  tag?: string;
+}) => {
+  const res = await api.get<{ notes: Note[]; totalPages: number }>("/notes", {
+    params,
+    headers: await getHeaders(),
+  });
+  return res.data;
+};
+
+export const fetchNoteById = async (id: string) => {
+  const res = await api.get<Note>(`/notes/${id}`, {
+    headers: await getHeaders(),
+  });
+  return res.data;
+};
+
+export const getMe = async () => {
+  const res = await api.get<User>("/users/me", {
+    headers: await getHeaders(),
+  });
+  return res.data;
+};

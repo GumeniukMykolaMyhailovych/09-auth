@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createNote } from "@/lib/api/api";
+import { createNote } from '@/lib/api/clientApi';
 import css from "./NoteForm.module.css";
 import { useRouter } from "next/navigation";
 import { useNoteStore } from "@/lib/store/noteStore";
@@ -15,9 +15,7 @@ export default function NoteForm() {
 
   const [formData, setFormData] = useState(draft);
 
-  useEffect(() => {
-    setFormData(draft);
-  }, [draft]);
+
 
   const mutation = useMutation({
     mutationFn: createNote,
