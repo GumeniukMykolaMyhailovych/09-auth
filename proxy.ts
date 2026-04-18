@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { fetchNotes } from "./lib/api/serverApi";
+import { checkSession } from "./lib/api/serverApi";
+import { isAxiosError } from "axios";
 
 export async function proxy(request: NextRequest) {
   const accessToken = request.cookies.get("accessToken")?.value;
@@ -24,9 +25,22 @@ export async function proxy(request: NextRequest) {
 
   if (refreshToken && !accessToken) {
     try {
-      await fetchNotes({ page: 1 });
-      return NextResponse.next();
-    } catch {
+      const res = await checkSession();
+
+      const response = NextResponse.next();
+
+      const setCookie = res.headers["set-cookie"];
+
+      if (setCookie) {
+        response.headers.set("set-cookie", setCookie);
+      }
+
+      return response;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        console.log(error.response?.data);
+      }
+
       return NextResponse.redirect(new URL("/sign-in", request.url));
     }
   }

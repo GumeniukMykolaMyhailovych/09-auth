@@ -15,15 +15,27 @@ export default function NotePreview({ id }: { id: string }) {
   });
 
   if (isLoading)
-    return <Modal onClose={() => router.back()}>Loading...</Modal>;
+    return (
+      <Modal onClose={() => router.back()}>
+        <button onClick={() => router.back()}>Close</button>
+        Loading...
+      </Modal>
+    );
 
   if (error instanceof Error)
-    return <Modal onClose={() => router.back()}>{error.message}</Modal>;
+    return (
+      <Modal onClose={() => router.back()}>
+        <button onClick={() => router.back()}>Close</button>
+        {error.message}
+      </Modal>
+    );
 
   if (!data) return null;
 
   return (
     <Modal onClose={() => router.back()}>
+      <button onClick={() => router.back()}>Close</button>
+
       <h2>{data.title}</h2>
       <p>{data.content}</p>
       <p>{data.tag}</p>
