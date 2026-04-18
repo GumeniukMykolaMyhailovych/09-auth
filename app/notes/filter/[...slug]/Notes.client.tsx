@@ -28,7 +28,12 @@ export default function NotesClient({ tag }: { tag: string }) {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["notes", page, normalizedTag, debouncedSearch],
-    queryFn: () => fetchNotes(page, normalizedTag, debouncedSearch),
+    queryFn: () =>
+      fetchNotes({
+        page,
+        tag: normalizedTag,
+        search: debouncedSearch,
+      }),
     placeholderData: (prev) => prev,
   });
 
@@ -47,7 +52,6 @@ export default function NotesClient({ tag }: { tag: string }) {
         </Link>
       </div>
 
-      {/* 🔥 ВИПРАВЛЕННЯ ТУТ */}
       {data?.notes && data.notes.length > 0 && (
         <NoteList notes={data.notes} />
       )}
