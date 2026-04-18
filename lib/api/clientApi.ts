@@ -33,3 +33,24 @@ export const logout = async () => {
     withCredentials: true,
   });
 };
+
+// 🔥 ВОТ ЦЕГО НЕ ВИСТАЧАЛО
+export const fetchNotes = async (params: {
+  page?: number;
+  search?: string;
+  tag?: string;
+}) => {
+  const res = await axios.get(`${BASE_URL}/notes`, {
+    params,
+    withCredentials: true,
+  });
+  return res.data;
+};
+
+// (опціонально, але часто використовується)
+export const deleteNote = async (id: string) => {
+  const res = await axios.delete(`${BASE_URL}/notes/${id}`, {
+    withCredentials: true,
+  });
+  return res.data;
+};
