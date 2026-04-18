@@ -1,6 +1,10 @@
 import axios from "axios";
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL + "/api";
+if (!process.env.NEXT_PUBLIC_API_URL) {
+  throw new Error("NEXT_PUBLIC_API_URL is not defined");
+}
+
+const baseURL = `${process.env.NEXT_PUBLIC_API_URL}/api`;
 
 export const api = axios.create({
   baseURL,
