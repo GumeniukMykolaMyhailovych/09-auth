@@ -7,4 +7,7 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-
+export const fetchNoteById = async (id: string) => {
+  const res = await api.get(`/notes/${id}`);
+  return res.data;
+};
