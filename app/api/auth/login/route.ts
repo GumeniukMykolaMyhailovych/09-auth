@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { api } from "../../../../lib/api/api";
 import { cookies } from "next/headers";
+import { parse } from "cookie";
 import { isAxiosError } from "axios";
 
 export async function POST(req: NextRequest) {
@@ -13,13 +14,19 @@ export async function POST(req: NextRequest) {
     const setCookie = apiRes.headers["set-cookie"];
 
     if (setCookie) {
-      if (Array.isArray(setCookie)) {
-        setCookie.forEach((cookie) => {
-          cookieStore.set(cookie);
-        });
-      } else {
-        cookieStore.set(setCookie);
-      }
+      const cookieArray = Array.isArray(setCookie) ? setCookie : [setCookie];
+
+      cookieArray.forEach((cookieStr) => {
+        const parsed = parse(cookieStr);
+
+        if (parsed.accessToken) {
+          cookieStore.set("accessToken", parsed.accessToken);
+        }
+
+        if (parsed.refreshToken) {
+          cookieStore.set("refreshToken", parsed.refreshToken);
+        }
+      });
     }
 
     return NextResponse.json(apiRes.data, { status: apiRes.status });
