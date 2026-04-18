@@ -20,7 +20,7 @@ export async function proxy(request: NextRequest) {
   }
 
   if ((accessToken || refreshToken) && isAuthPage) {
-    return NextResponse.redirect(new URL("/notes", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   if (refreshToken && !accessToken) {
