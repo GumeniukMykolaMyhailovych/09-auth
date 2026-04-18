@@ -17,16 +17,6 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: "NoteHub",
   description: "Manage your notes easily with NoteHub",
-  openGraph: {
-    title: "NoteHub",
-    description: "Manage your notes easily with NoteHub",
-    url: "https://notehub.com",
-    images: [
-      {
-        url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
-      },
-    ],
-  },
 };
 
 export default function RootLayout({

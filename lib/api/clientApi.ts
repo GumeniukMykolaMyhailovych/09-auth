@@ -1,45 +1,35 @@
-import { api } from "./api";
+import axios from "axios";
 import { User } from "@/types/user";
 
+const BASE_URL = "https://notehub-api.goit.study";
 
+// REGISTER
 export const register = async (data: { email: string; password: string }) => {
-  const res = await api.post<User>("/auth/register", data);
+  const res = await axios.post<User>(`${BASE_URL}/auth/register`, data, {
+    withCredentials: true,
+  });
   return res.data;
 };
 
-
+// LOGIN
 export const login = async (data: { email: string; password: string }) => {
-  const res = await api.post<User>("/auth/login", data);
+  const res = await axios.post<User>(`${BASE_URL}/auth/login`, data, {
+    withCredentials: true,
+  });
   return res.data;
 };
 
-
-export const logout = async () => {
-  await api.post("/auth/logout");
-};
-
-
+// SESSION
 export const checkSession = async () => {
-  const res = await api.get<User | null>("/auth/session");
+  const res = await axios.get<User | null>(`${BASE_URL}/auth/session`, {
+    withCredentials: true,
+  });
   return res.data;
 };
 
-
-export const getMe = async () => {
-  const res = await api.get<User>("/users/me");
-  return res.data;
-};
-
-export const fetchNotes = async (params: {
-  page?: number;
-  search?: string;
-  tag?: string;
-}) => {
-  const res = await api.get("/notes", { params });
-  return res.data;
-};
-
-export const deleteNote = async (id: string) => {
-  const res = await api.delete(`/notes/${id}`);
-  return res.data;
+// LOGOUT
+export const logout = async () => {
+  await axios.post(`${BASE_URL}/auth/logout`, null, {
+    withCredentials: true,
+  });
 };

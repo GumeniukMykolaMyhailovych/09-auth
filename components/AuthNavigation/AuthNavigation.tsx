@@ -11,8 +11,19 @@ export default function AuthNavigation() {
   const { isAuthenticated, user, clearAuth } = useAuthStore();
 
   const handleLogout = async () => {
-    await logout();
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+
+    // 🔥 важливо: спочатку очищаємо стан
     clearAuth();
+
+    // 🔥 потім оновлюємо UI
+    router.refresh();
+
+    // 🔥 і вже після цього редірект
     router.push("/sign-in");
   };
 
