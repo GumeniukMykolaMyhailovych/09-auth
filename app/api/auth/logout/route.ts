@@ -3,25 +3,13 @@ import { cookies } from "next/headers";
 import { api } from "../../../../lib/api/api";
 import { isAxiosError } from "axios";
 
-function logErrorResponse(error: unknown) {
-  if (isAxiosError(error)) {
-    console.log(error.response?.data);
-    return {
-      message: error.response?.data?.message || "Request failed",
-      status: error.response?.status || 500,
-    };
-  }
-
-  return { message: "Unexpected error", status: 500 };
-}
-
 export async function POST() {
-  const cookieStore = await cookies();
-
-  const accessToken = cookieStore.get("accessToken")?.value;
-  const refreshToken = cookieStore.get("refreshToken")?.value;
-
   try {
+    const cookieStore = await cookies();
+
+    const accessToken = cookieStore.get("accessToken")?.value;
+    const refreshToken = cookieStore.get("refreshToken")?.value;
+
     await api.post("auth/logout", null, {
       headers: {
         Cookie: `accessToken=${accessToken}; refreshToken=${refreshToken}`,
@@ -33,8 +21,16 @@ export async function POST() {
 
     return NextResponse.json({ message: "Logged out successfully" });
   } catch (error) {
-    const { message, status } = logErrorResponse(error);
+    if (isAxiosError(error)) {
+      return NextResponse.json(
+        error.response?.data,
+        { status: error.response?.status || 500 }
+      );
+    }
 
-    return NextResponse.json({ message }, { status });
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

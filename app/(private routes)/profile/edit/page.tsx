@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { getMe } from "@/lib/api/clientApi";
-import { updateUser } from "@/lib/api/clientApi";
+import { getMe, updateUser } from "@/lib/api/clientApi";
+import { useAuthStore } from "@/lib/store/authStore";
 
 export default function EditProfilePage() {
   const router = useRouter();
+  const { setUser } = useAuthStore();
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [avatar, setAvatar] = useState("");
@@ -25,7 +27,11 @@ export default function EditProfilePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateUser({ username });
+
+    const updatedUser = await updateUser({ username });
+
+    setUser(updatedUser);
+
     router.push("/profile");
   };
 
@@ -38,14 +44,13 @@ export default function EditProfilePage() {
       <p>Email: {email}</p>
 
       <form onSubmit={handleSubmit}>
-        <label>
-          Username
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </label>
+        <label htmlFor="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
 
         <button type="submit">Save</button>
       </form>
