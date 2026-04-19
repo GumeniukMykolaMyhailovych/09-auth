@@ -20,14 +20,17 @@ export async function POST() {
     cookieStore.delete("accessToken");
     cookieStore.delete("refreshToken");
 
-    return NextResponse.json({ message: "Logged out successfully" });
+    return NextResponse.json(
+      { message: "Logged out successfully" },
+      { status: 200 }
+    );
   } catch (error) {
     if (isAxiosError(error)) {
       logErrorResponse(error.response?.data);
 
       return NextResponse.json(
         { error: error.message, response: error.response?.data },
-        { status: error.response?.status || 500 }
+        { status: error.status } 
       );
     }
 
