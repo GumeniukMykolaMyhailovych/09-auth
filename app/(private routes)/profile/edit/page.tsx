@@ -25,8 +25,8 @@ export default function EditProfilePage() {
     fetchUser();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAction = async (formData: FormData) => {
+    const username = formData.get("username") as string;
 
     const updatedUser = await updateUser({ username });
 
@@ -41,21 +41,27 @@ export default function EditProfilePage() {
 
       <Image src={avatar} alt="avatar" width={120} height={120} />
 
-      <p>Email: {email}</p>
+      <form action={handleAction}>
+        <div>
+          <label htmlFor="email">Email</label>
+          <input id="email" value={email} readOnly />
+        </div>
 
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username</label>
-        <input
-          id="username"
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
+        <div>
+          <label htmlFor="username">Username</label>
+          <input
+            id="username"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </div>
 
         <button type="submit">Save</button>
+        <button type="button" onClick={() => router.back()}>
+          Cancel
+        </button>
       </form>
-
-      <button onClick={() => router.back()}>Cancel</button>
     </div>
   );
 }

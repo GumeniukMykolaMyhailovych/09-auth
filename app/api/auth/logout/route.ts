@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { api } from "../../../../lib/api/api";
 import { isAxiosError } from "axios";
+import { logErrorResponse } from "../../_utils/utils";
 
 export async function POST() {
   try {
@@ -22,14 +23,18 @@ export async function POST() {
     return NextResponse.json({ message: "Logged out successfully" });
   } catch (error) {
     if (isAxiosError(error)) {
+      logErrorResponse(error.response?.data);
+
       return NextResponse.json(
-        error.response?.data,
+        { error: error.message, response: error.response?.data },
         { status: error.response?.status || 500 }
       );
     }
 
+    logErrorResponse({ message: (error as Error).message });
+
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }
